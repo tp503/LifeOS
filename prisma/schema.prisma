@@ -1,0 +1,132 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum InboxSource {
+  MANUAL
+  EMAIL
+  SMS
+}
+
+enum InboxState {
+  NEW
+  NEEDS_REVIEW
+  ARCHIVED
+}
+
+model InboxItem {
+  id          String      @id @default(cuid())
+  source      InboxSource
+  externalId  String?     @unique
+  title       String
+  body        String      @default("")
+  state       InboxState  @default(NEW)
+  tags        String      @default("[]")
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Note {
+  id        String     @id @default(cuid())
+  title     String
+  body      String     @default("")
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  links     NoteLink[]
+}
+
+model NoteLink {
+  id         String @id @default(cuid())
+  noteId     String
+  note       Note   @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  targetType String
+  targetId   String
+
+  @@index([noteId])
+  @@index([targetType, targetId])
+}
+
+model Event {
+  id         String    @id @default(cuid())
+  title      String
+  startsAt   DateTime
+  endsAt     DateTime?
+  allDay     Boolean   @default(false)
+  category   String    @default("general")
+  externalId String?   @unique
+  source     String    @default("manual")
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@index([startsAt])
+}
+
+model SmsThread {
+  id        String       @id @default(cuid())
+  address   String
+  lastAt    DateTime     @default(now())
+  messages  SmsMessage[]
+
+  @@unique([address])
+}
+
+model SmsMessage {
+  id         String    @id @default(cuid())
+  threadId   String
+  thread     SmsThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  direction  String
+  body       String
+  sentAt     DateTime  @default(now())
+  externalId String?   @unique
+
+  @@index([threadId])
+}
+
+model Account {
+  id             String          @id @default(cuid())
+  name           String
+  type           String          @default("other")
+  transactions   Transaction[]
+  recurringRules RecurringRule[]
+}
+
+model Transaction {
+  id          String    @id @default(cuid())
+  accountId   String?
+  account     Account?  @relation(fields: [accountId], references: [id], onDelete: SetNull)
+  occurredAt  DateTime
+  amount      Decimal   @default(0)
+  description String
+  category    String?
+  externalId  String?   @unique
+  createdAt   DateTime  @default(now())
+
+  @@index([occurredAt])
+  @@index([accountId])
+}
+
+model RecurringRule {
+  id         String    @id @default(cuid())
+  name       String
+  amount     Decimal   @default(0)
+  cadence    String
+  nextDue    DateTime?
+  accountId  String?
+  account    Account?  @relation(fields: [accountId], references: [id], onDelete: SetNull)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model ConnectorState {
+  id          String    @id @default(cuid())
+  connectorId String    @unique
+  lastSyncAt  DateTime?
+  lastError   String?
+  config      String    @default("{}")
+  updatedAt   DateTime  @updatedAt
+}

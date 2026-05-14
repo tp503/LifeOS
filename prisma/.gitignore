@@ -1,0 +1,3 @@
+# LifeOS — local data (see DATABASE_URL)
+*.db
+*.db-journal

@@ -44,5 +44,4 @@ coverage/
 .vercel
 
 # TypeScript
-next-env.d.ts
 *.tsbuildinfo
