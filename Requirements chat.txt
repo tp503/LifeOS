@@ -1,0 +1,307 @@
+Gemini
+Cursor: AI Skills and Instructions
+https://gemini.google.com/share/71d3e265fe09
+Created with Thinking 13 May 2026 at 22:08
+Published on 14 May 2026 at 07:37
+Can cursor access skills it needs to complete a task automatically or does it need specific instructions
+
+It’s a bit of both. Think of Cursor as a highly skilled intern: it has the "muscles" to do almost anything autonomously, but it still needs a "manager" (you) to tell it which project to work on and what the goal is.
+
+Here is the breakdown of how Cursor handles "skills" and instructions:
+
+1. Automatic "Skills" (Agent Mode)
+In Agent/Composer mode, Cursor doesn't just wait for line-by-line instructions. Once you give it a goal, it can autonomously:  
+
+Search your codebase: It "learns" how your project works by reading files without you pointing to them.  
+
+Execute multi-step plans: If you say "Add a login page," it will automatically create the UI, update the routing, and write the backend logic in one go.
+
+Run Terminal Commands: It can try to run your code, see the error, and fix its own mistake without you saying a word.
+
+Access Web Docs: If it doesn't know a specific library, it can "decide" to browse the internet to learn the latest documentation.  
+
+2. When it Needs Specific Instructions
+While it’s smart, it isn't a mind-reader. You need to provide specific instructions in three scenarios:
+
+The "What" and "Why": You must define the high-level task (e.g., "Make the header blue and sticky"). It won't randomly start improving your code unless you ask.
+
+Stylistic Preferences (Rules): If you want it to use a specific pattern (like "Always use Tailwind CSS" or "Never use 'any' in TypeScript"), you should put those in a .cursorrules file. This acts as a permanent "instruction manual" so you don't have to repeat yourself.  
+
+Complex Context: If a task depends on a very specific piece of information buried in a massive project, "mentioning" that file with the @ symbol (e.g., @auth-logic.ts) helps it work much faster and more accurately.
+
+3. The "Skills" Feature (New/Nightly)
+Cursor has recently introduced a specific Skills feature (and .mdc rules). These are portable "knowledge packages" you can save.  
+
+How it works: You can save a complex workflow (like "How to deploy to AWS") as a Skill.  
+
+Automation: The agent can automatically detect when a skill is relevant to your current task and "pull it off the shelf" to complete the work without you explicitly calling for it.  
+
+  
+The Bottom Line:
+You provide the intent and the rules of the house; Cursor provides the execution and the technical skills to get there.
+
+Are you trying to set up a specific workflow, or just seeing how much of the "heavy lifting" you can offload to the AI?
+
+Are there any popular or recommended rules to start a project with
+
+Starting a project with the right .cursorrules (or the newer .cursor/rules/*.mdc format) is like giving your AI collaborator a "Company Handbook." It prevents the AI from making the same repetitive mistakes and ensures the code matches your specific style from day one.  
+
+Here are the most recommended rules to include when starting a new project in 2026.
+
+1. The "Foundational Context" (Always Apply)
+This rule tells Cursor exactly what the project is and prevents it from hallucinating older versions of libraries.  
+
+File: .cursor/rules/project-context.mdc
+
+Mode: alwaysApply: true
+
+Instruction:
+
+Tech Stack: Next.js 15 (App Router), TypeScript 5+, Tailwind CSS, and Prisma.
+
+Tone: Be concise. Do not explain standard code patterns (like how a useEffect works) unless specifically asked.  
+
+Constraint: Never use the any type. Use unknown with type guards if the type is truly dynamic.  
++1
+
+Preference: Favor Server Components by default. Only use 'use client' when browser-specific APIs or state are required.  
++1
+
+2. The "No Placeholders" Rule
+One of the most common AI annoyances is when it leaves a comment saying // ... rest of code here. This rule kills that habit.
+
+File: .cursor/rules/no-placeholders.mdc
+
+Instruction:
+
+Zero Placeholder Policy: NEVER use comments like // implement logic here or // ... rest of the file.  
+
+Completeness: Every function you write must be fully implemented. If you don't have enough context to finish it, stop and ask me for the missing information instead of leaving a "TODO."  
+
+3. Component Architecture (Auto-Attached)
+If you're doing web dev, this ensures all your components look and act the same.
+
+File: .cursor/rules/react-components.mdc
+
+Globs: src/components//*.tsx, app//*.tsx
+
+Instruction:
+
+Pattern: Use functional components with the function keyword (not const arrow functions).  
+
+Exports: Use named exports only. No export default.  
+
+Naming: Use kebab-case for filenames (user-profile.tsx) and PascalCase for component names (UserProfile).  
+
+Styling: Use Tailwind CSS utility classes. Do not create separate CSS files or use inline style objects.  
+
+4. The "Security & Safety" Rule (Critical for Agent Mode)
+Since Cursor's Agent mode can now run terminal commands and delete files, you need "guardrails."
+
+File: .cursor/rules/agent-safety.mdc
+
+Instruction:
+
+Critical: NEVER delete configuration files (like .env, package.json, or tsconfig.json) without explicit user confirmation.  
+
+Dependency Check: Before importing a new npm package, run npm list <package-name> in the terminal to verify it is already installed. Do not assume it exists.  
+
+Environment: If you need to add an environment variable, tell me which one is needed; do not attempt to guess or create dummy values in .env.
+
+5. Error Handling Strategy
+Prevents the AI from using generic try/catch blocks everywhere, which can swallow useful errors.
+
+File: .cursor/rules/error-handling.mdc
+
+Instruction:
+
+Guard Clauses: Use early returns to handle error conditions or invalid states at the top of functions.  
+
+Clean Logic: Avoid deeply nested if/else statements. The "happy path" should always be at the lowest indentation level at the end of the function.  
++1
+
+Logging: Use the project's internal logger (@/lib/logger) instead of console.log.
+
+Summary Checklist for a New Project
+Rule File	Goal
+project-context.mdc	Defines your stack (React, Python, Go) and versions.
+no-placeholders.mdc	Forces the AI to write 100% of the code, no shortcuts.
+testing.mdc	(Optional) Ensures all new features include a .test.ts file.
+.cursorrules (Legacy)	Use this single file for smaller projects to keep all rules in one place.
+Pro Tip: As you work, if you find yourself correcting the AI for the same thing twice (e.g., "Stop using semicolons!"), immediately add that to your rules. It's the best way to "train" Cursor to your specific preferences.
+
+I do not want to be involved in the code, I want cursor to handle everything based on my requests. As such assuring the code is high priority at every stage
+
+If you want to move from "coder" to "Product Manager," where Cursor acts as your autonomous engineering team, your strategy changes entirely. To ensure high-quality code without you ever touching a line, you need to set up a Self-Correction Loop.
+
+The goal is to force Cursor to verify its own work through automated testing and logging, rather than relying on your eyes.
+
+1. The "Quality First" Configuration
+Add these rules to your .cursor/rules/quality.mdc file. This shifts the burden of proof from you to the AI.
+
+Instruction:
+
+Verification Driven: Every task must end with a verification step. If you add a feature, you must also write and run a test for it.
+
+Terminal First: Use the terminal to check for linting errors, type errors (tsc), and build errors after every significant change.
+
+No Manual Intervention: Assume the user will never open the code editor. If a build fails, you must read the terminal output and fix it autonomously until the build passes.
+
+Refactoring: Before adding a new feature, analyze the existing file. If it's becoming messy or "spaghetti code," refactor it first to maintain high architecture standards.
+
+2. Force an "Automated Testing" Culture
+Since you aren't reading the code, you need Unit Tests to be your "eyes." You should instruct Cursor to follow a Test-Driven Development (TDD) approach.
+
+Rule: "Before writing any logic for a new request, create a test file that defines what 'success' looks like. Do not consider the task finished until all tests pass green in the terminal."
+
+test-driven development cycle diagram, AI generated
+Shutterstock
+3. The "Chain of Thought" Requirement
+To ensure Cursor isn't just guessing, require it to "think out loud" before it touches any files. This allows you to catch logic errors at the conceptual level before they become bugs.
+
+Rule: "Before editing code, provide a brief 'Execution Plan' in the chat. Detail which files you will create, which you will modify, and how you will test the result. Wait for a '👍' or 'Go' before proceeding."
+
+4. Implementation of "Health Checks"
+Since you want it to handle everything, you need a way to know if the project is "healthy" overall. Instruct Cursor to create a Report after every major session:
+
+Requirement	AI Action
+Type Safety	Run npm run lint or pyright to ensure no hidden bugs.
+Complexity	Check for functions longer than 50 lines and break them down.
+Documentation	Automatically update a README.md or API.md so you know how to use the app.
+Dependencies	Audit for outdated or insecure packages automatically.
+5. Managing the "Agent" Mindset
+When you make a request, be the Architect, not the Coder.
+
+Bad Request: "Make a button that saves user data." (Cursor might do it poorly).
+
+Good Request: "Implement a user data save feature. Ensure it has a loading state, handles network errors gracefully, saves to the database using the existing schema, and includes a unit test for the save function. Run the build to make sure nothing broke."
+
+Important Warning
+Even with the best AI, "Agentic" workflows can sometimes drift (where the AI fixes one thing but breaks another). To keep quality at 100%, occasionally tell Cursor:
+
+"Perform a full codebase audit. Identify any technical debt, unused variables, or inconsistent patterns, and fix them now."
+
+Would you like me to draft a specific "Master Project Rule" that combines all of these into one document for your project?
+
+A colleague published a tool on GitHub callent agent bridge to facilitate multiple llms working autonomously to check each others code. Could this or something similar be used within cursor
+
+While I don't see a specific tool widely known as "Agent Bridge" for this exact purpose in the general public domain yet, the concept of Multi-Agent Consensus (LLM-Council) is the "gold standard" for high-stakes autonomous coding in 2026.
+
+Using multiple LLMs to check each other's work within Cursor is not only possible; it is the primary way power users ensure their code doesn't "drift" into bugs when they aren't looking.
+
+Here is how you can implement a multi-agent "Agent Bridge" style workflow directly within Cursor:
+
+1. Built-in "LLM Council" (Cursor 2.0+ Parallel Mode)
+Cursor now supports Parallel Agent Mode, which allows you to run up to 8 agents simultaneously. You can use this to simulate a "bridge" where different models (e.g., Claude 3.5 Sonnet and GPT-4o) review the same code.
+
+The Workflow: In Composer, use a prompt like:
+
+"Draft the feature in one agent. Simultaneously, have a second agent act as a Senior Security Engineer to review the diff for vulnerabilities, and a third agent act as a QA Lead to write a test suite. Only merge if all three agents 'agree' on the implementation."
+
+2. Integration via Model Context Protocol (MCP)
+If your colleague's tool (or similar tools like Open Code Review) provides an API or a CLI, you can connect it to Cursor using MCP.
+
+How to set it up: Go to Settings > Features > MCP.
+
+Add New Server: Point Cursor to the tool's executable (e.g., stdio command: npx agent-bridge-cli).
+
+The Result: Cursor’s built-in agent can now "call" your colleague's tool as a skill. You can instruct Cursor: "Before you finish, run @AgentBridge to have a secondary LLM verify these changes."
+
+3. The "Shadow Reviewer" Rule
+You can "hardcode" a multi-agent check into your project rules so it happens automatically without you asking. Add this to your .cursorrules:
+
+Verification Protocol:
+
+After writing code, the Agent must perform a "self-critique" phase.
+
+Switch Models: (Manual or via Composer dropdown) The Agent should suggest: "I have finished the logic with Claude; should I run a GPT-4o 'Shadow Review' to check for edge cases?"
+
+Validation: The Agent must run the agent-bridge terminal command and resolve all flagged issues before reporting the task as complete.
+
+Why this is a "Cheat Code" for 100% Quality
+By using a "bridge" of multiple models, you eliminate the "hallucination echo chamber." If Model A makes a mistake, it’s unlikely Model B (with a different training set) will make the exact same mistake.
+
+Strategy	Speed	Quality	Effort
+Single Agent	⚡ Fast	⭐ Good	Low
+Parallel Mode	⚡⚡ Very Fast	⭐⭐⭐ Great	Low
+Agent Bridge (Multi-Model)	🐢 Slower	⭐⭐⭐⭐⭐ Elite	Medium (Setup)
+Recommendation: If you truly want to be "hands-off," I suggest setting up an MCP server for your colleague's tool. This allows the Cursor Agent to "outsource" the review process to the external tool autonomously, giving you the high-priority assurance you need.
+
+Does your colleague's tool run as a CLI (Terminal) or a web API? I can help you write the specific MCP config for it.
+
+Help me write an initial prompt for cursor pro to produce a life organiser tool. I want it to access my emails on outlook to look for appointments, important dates, kids club messages etc and automatically invest them, same for my text messages and WhatsApp. I want it to manage medical appointments, birthdays, etc. I want to be able to easily add notes or ideas that are automatically sorted, organised and cross referenced. I want it to automatically pull infonantial data from my current account, credit cards, mortgages, etc and build a predictive model based on regular payments and general spending to warn me about future issues and help me plan spending and holidays. It should be run from a localhost webapp that I can access and interact with from my phone, and feature a dashboard to present the most important information.
+
+This is an ambitious "Super App" project. To achieve the high-priority quality you demand while remaining hands-off, we cannot use a single massive prompt—that leads to "AI fatigue" where the model skips details.
+
+Instead, we will use a "Master Orchestration Prompt." This tells Cursor to act as a Lead Architect and Senior Engineer, requiring it to plan before it builds.
+
+Step 1: Set the "Rules of Engagement"
+Before you paste the prompt, ensure your .cursorrules file (or .cursor/rules/primary.mdc) includes the Quality First instructions we discussed:
+
+Mandatory terminal checks (linting/build).
+
+Mandatory unit tests for financial calculations.
+
+No placeholders.
+
+Step 2: The Initial Launch Prompt
+Open Composer (Cmd+I / Ctrl+I) and set it to Agent Mode. Paste the following:
+
+Role: You are a Senior Full-Stack Architect building "LifeOS," a private, local-first life organizer.
+
+Objective: Build a localhost web app (Next.js, TypeScript, Tailwind, SQLite) that aggregates my entire digital life into a predictive dashboard.
+
+Core Pillars to Architect:
+
+Intelligence Hub: A centralized "Inbox" that uses LLM processing to sort raw text/data into Appointments, Financials, or Notes.
+
+Integrations (The Bridges):
+
+Outlook: Use Microsoft Graph API to sync emails and calendars.
+
+Financials: Integrate Plaid API (or a secure CSV/Manual import fallback) to track accounts, credit cards, and mortgages.
+
+Messaging: Create a listener interface for WhatsApp/SMS (via Twilio or local backup sync).
+
+Predictive Engine: A logic layer that calculates cash-flow runway based on recurring mortgage/utility payments vs. average spending.
+
+Mobile-First Dashboard: A responsive UI that highlights "Immediate Actions" (e.g., "Kids club tomorrow at 4 PM," or "Projected balance low in 14 days").
+
+Execution Plan (Strict):
+
+Step 1: Setup. Initialize the project with a robust SQLite schema capable of handling cross-referenced notes and financial transactions.
+
+Step 2: Verification. After each feature, run a build check and write a test to ensure data integrity.
+
+Step 3: Security. Ensure all API keys are handled via .env and data stays local.
+
+First Task: Design the database schema and the project structure. Present the plan to me, then wait for my "Go" before writing the code.
+
+Step 3: Managing the "High Priority" Quality
+Once Cursor provides the plan, you should look for these three things in its response to ensure it’s meeting your quality bar:
+
+1. The Schema (The Foundation)
+Ensure it creates a Relational Database. For your "Notes to Appointments" cross-referencing, the AI should suggest a structure similar to this:
+
+2. The Financial Logic
+Since you want predictive modeling, tell Cursor:
+
+"For the financial engine, do not just sum numbers. Use a 'Monte Carlo' simulation or a basic linear regression to predict my bank balance 30 days out based on the 'Regular Payments' table."
+
+3. The "Hands-Off" Verification
+After it writes the code, use this follow-up command to ensure it didn't break anything:
+
+"Run a full project audit. Check for TypeScript errors, linting issues, and verify that the 'Dashboard' correctly displays data from the SQLite database. Do not stop until the build is green."
+
+Technical Reality Check (What to Watch For)
+WhatsApp/SMS: These are the hardest to automate locally because Meta (WhatsApp) has strict API costs. Cursor might suggest using a "Web Scraper" or a "Twilio" bridge. Since you want to be hands-off, I recommend telling it to: "Use the Twilio API for messaging integration as it is the most stable autonomous path."
+
+Bank Data: Using Plaid is the industry standard for what you want, but it requires a developer account. Cursor can write the code for it, but you will need to paste your API keys into the .env file it creates.
+
+Would you like me to refine the "Financial Predictive Model" logic specifically so the AI knows exactly how to calculate your future spending?
+
+Google Privacy PolicyOpens in a new window
+Google Terms of ServiceOpens in a new window
+Your privacy and Gemini AppsOpens in a new window
+Gemini may display inaccurate info, including about people, so double-check its responses.
+
