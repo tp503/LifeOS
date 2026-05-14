@@ -1,0 +1,12 @@
+---
+description: LifeOS stack and baseline TypeScript conventions
+alwaysApply: true
+---
+
+# LifeOS project context
+
+- **Product:** LifeOS — local-first personal life organizer (dashboard, inbox, calendar, finance, connectors).
+- **Stack:** Next.js (App Router), TypeScript, Tailwind CSS, SQLite (Prisma or Drizzle once chosen).
+- **Tone:** Be direct. Do not lecture on basics (e.g. what `useEffect` is) unless asked.
+- **Types:** Do not use `any`. Prefer `unknown` plus narrow guards when data is dynamic.
+- **React:** Prefer Server Components by default. Use `'use client'` only for browser APIs, interactivity, or local UI state.

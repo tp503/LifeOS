@@ -1,0 +1,23 @@
+---
+description: Verification-first delivery — tests, lint, build, autonomous fixes
+alwaysApply: true
+---
+
+# Quality and verification (non-negotiable)
+
+Assume the **user will not review implementation details** in the editor. Your job is to leave the repo in a **proven** state.
+
+## Every meaningful change must end with verification
+
+1. Run **lint** and **typecheck** (`tsc` or project equivalent) when the change touches TS/TSX or config.
+2. Run **`npm run build`** (or the repo’s build script) after **feature-sized** or **multi-file** edits unless the user explicitly scoped a smaller check.
+3. For **new logic** (parsers, financial math, date rules, sync mappers): add or extend **automated tests** first or in the same change. **Do not** mark work complete with failing tests.
+4. If a command fails: read the output, fix the root cause, and re-run until green **without** asking the user to open files unless blocked on secrets or irreversible decisions.
+
+## Refactoring
+
+Before growing a messy module with new behavior, **refactor for clarity** when files show duplication, unclear boundaries, or functions approaching **~50 lines** of non-trivial logic (split or extract).
+
+## Drift warning
+
+If a fix might have widened blast radius, briefly note what you re-ran (e.g. build + which tests) so the user can trust the outcome without reading code.

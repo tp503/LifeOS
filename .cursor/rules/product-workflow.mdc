@@ -1,0 +1,27 @@
+---
+description: How to collaborate — plans, approval gates, architect-level requests
+alwaysApply: true
+---
+
+# Product-manager workflow (LifeOS)
+
+The user prefers to act as **architect**, not line-by-line coder. Cursor owns implementation and verification.
+
+## Execution plan (before substantive work)
+
+For **non-trivial** work (new feature, new connector, schema changes, or touching **3+ files**):
+
+1. Post a short **execution plan** in chat: goal, **files to add/change**, and **how you will verify** (commands + any new tests).
+2. **Then proceed** in the same turn unless the user has asked for an explicit pause (see below).
+
+## Approval gate (only when requested)
+
+If the user says to **wait for approval**, **Go**, or **👍** before edits: post the plan and **stop before applying edits** until they confirm.
+
+## Good requests
+
+Encourage (and follow) requests that name **acceptance criteria**: UX states (loading/error), data source, persistence, and **what “done” means** (e.g. “build green + test X passes”).
+
+## Session wrap (major milestones)
+
+When finishing a **large milestone** (e.g. a full phase from PROPOSAL.md), add a short chat summary: what shipped, **commands run**, known follow-ups, and any **connector/env** the user must configure.

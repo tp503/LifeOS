@@ -1,0 +1,19 @@
+---
+description: Periodic health — audits, docs touchpoints, dependencies
+alwaysApply: true
+---
+
+# Repo health and audits
+
+## When the user asks for an audit
+
+Run a **full pass**: lint, typecheck, build, and tests. Fix straightforward issues (unused imports, dead code, obvious inconsistencies). Call out anything needing **product or security** decisions instead of guessing.
+
+## After major milestones
+
+- Confirm **README** (or the project’s main doc) still matches how to run, configure `.env`, and use connectors. Update only if behavior or env vars changed.
+- If dependencies were bumped or added, note **security/outdated** concerns if `npm audit` (or equivalent) shows actionable high-severity items relevant to this app.
+
+## Optional multi-model review
+
+If the user uses **parallel agents** or external review (MCP): treat review output as **issues to resolve or explicitly defer**, not noise to ignore.

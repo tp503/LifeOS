@@ -1,0 +1,10 @@
+---
+description: No stubbed code or placeholder comments — finish or ask
+alwaysApply: true
+---
+
+# No placeholders
+
+- **Do not** leave `// TODO implement`, `// ... rest of code`, or half-implemented functions that cannot run.
+- If context is missing (API shape, business rule, credential): **stop and ask** with a concrete question instead of faking logic.
+- Comments should explain **non-obvious “why”**, not substitute for missing implementation.

@@ -103,6 +103,10 @@ Design principle: **breadth first, then depth** — each pillar ships as a thin 
 - **No silent failure:** connector errors surface on Dashboard and Settings.
 - **Tests** on financial math and parsers; **build/lint** after meaningful changes.
 
+## How Cursor should work on this repo
+
+Persistent agent guidance lives in [`.cursor/rules/`](.cursor/rules/): stack defaults (`project-context.mdc`), verification and TDD culture (`quality.mdc`), architect-style plans and optional approval gates (`product-workflow.mdc`), safety around config and secrets (`agent-safety.mdc`), no stubbed code (`no-placeholders.mdc`), and audit/session habits (`repo-health.mdc`). This matches the “hands-off you, hands-on proof” workflow from `Requirements chat.txt`.
+
 ## Success criteria (MVP)
 
 1. You can open LifeOS on your phone on the same LAN (and optionally via private VPN later).

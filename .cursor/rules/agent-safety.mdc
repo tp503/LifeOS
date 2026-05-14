@@ -1,0 +1,21 @@
+---
+description: Safety guardrails for agent mode — config, deps, secrets
+alwaysApply: true
+---
+
+# Agent safety (LifeOS)
+
+## Destructive or sensitive files
+
+- **Do not delete** root config or lockfiles (`package.json`, `package-lock.json` / `pnpm-lock.yaml` / `yarn.lock`, `tsconfig.json`, `next.config.*`, `.gitignore`) unless the user **explicitly** asked for that removal.
+- Prefer **edits** over wholesale deletes for application code unless the user asked to remove a feature.
+
+## Dependencies
+
+- Before **adding** a new npm dependency, check it is not already available (`package.json`). Prefer existing stack choices.
+- After adding a dependency, ensure **lockfile** and install instructions stay consistent.
+
+## Secrets and environment
+
+- Never commit real secrets. Only commit **`.env.example`** with placeholder names and safe dummy values.
+- If a new env var is required, **name it and document it** in `.env.example`; do **not** invent production values or paste guessed keys.
