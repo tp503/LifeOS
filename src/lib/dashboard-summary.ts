@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 
 export type DashboardSummary = {
-  inboxNew: number;
+  inboxAttention: number;
   eventsUpcoming: number;
   notes: number;
   accounts: number;
@@ -12,8 +12,8 @@ export type DashboardSummary = {
 export async function getDashboardSummary(): Promise<DashboardSummary> {
   const now = new Date();
   try {
-    const [inboxNew, eventsUpcoming, notes, accounts, connectors] = await Promise.all([
-      prisma.inboxItem.count({ where: { state: "NEW" } }),
+    const [inboxAttention, eventsUpcoming, notes, accounts, connectors] = await Promise.all([
+      prisma.inboxItem.count({ where: { state: { in: ["NEW", "NEEDS_REVIEW"] } } }),
       prisma.event.count({ where: { startsAt: { gte: now } } }),
       prisma.note.count(),
       prisma.account.count(),
@@ -21,7 +21,7 @@ export async function getDashboardSummary(): Promise<DashboardSummary> {
     ]);
 
     return {
-      inboxNew,
+      inboxAttention,
       eventsUpcoming,
       notes,
       accounts,
@@ -36,7 +36,7 @@ export async function getDashboardSummary(): Promise<DashboardSummary> {
   } catch (error) {
     const message = error instanceof Error ? error.message : "Database unavailable";
     return {
-      inboxNew: 0,
+      inboxAttention: 0,
       eventsUpcoming: 0,
       notes: 0,
       accounts: 0,

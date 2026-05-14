@@ -35,6 +35,8 @@ model Note {
   id        String     @id @default(cuid())
   title     String
   body      String     @default("")
+  tags      String     @default("[]")
+  pinned    Boolean    @default(false)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   links     NoteLink[]

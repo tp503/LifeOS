@@ -18,6 +18,16 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) — you will be redirected to `/dashboard`.
 
+After pulling updates, run **`npm run db:push`** whenever `prisma/schema.prisma` changes (new columns, etc.).
+
+## Phase 1 (current)
+
+- **Notes:** create, edit, delete, comma-separated tags, pin to dashboard, cross-links to events / inbox / transactions by id.
+- **Inbox:** manual items, keyword rules (medical, kids club, finance, appointments), archive and filters.
+- **Calendar:** manual events with categories.
+- **Search:** SQLite FTS5 over note and inbox title/body (first search creates the FTS table).
+- **Tests:** `npm run test` (Vitest) for tags, inbox rules, and FTS query builder.
+
 ## Windows PowerShell: `npm.ps1 cannot be loaded` (execution policy)
 
 PowerShell may run `npm.ps1`, which is blocked when script execution is restricted.
@@ -46,11 +56,13 @@ Close and reopen the terminal, then `npm -v` should work. If a **company Group P
 | `npm run build` | Production build               |
 | `npm run lint`  | ESLint                         |
 | `npm run db:push` | Apply `prisma/schema.prisma` to SQLite |
-| `npm run db:studio` | Prisma Studio GUI          |
+| `npm run test` | Vitest (tags, inbox rules, FTS helper) |
 
 ## Data
 
 SQLite file path is controlled by `DATABASE_URL` in `.env` (default `file:./lifeos.db` next to `prisma/schema.prisma`). The database file is gitignored.
+
+If **`prisma generate` fails with `EPERM ... rename ... query_engine-windows.dll.node`** (common with **OneDrive** syncing `node_modules`), try: pause OneDrive for this folder, delete `node_modules` and `.prisma`, then run `npm install` again from a terminal **outside** Cursor, or clone the repo outside OneDrive.
 
 ## Cursor rules
 
